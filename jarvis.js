@@ -1,6 +1,10 @@
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const recognition = new SpeechRecognition();
 
+const text_speak = new SpeechSynthesisUtterance();
+
+let emailListening = false;
+
 recognition.onend = () => {
     console.log('Speech recognition ended.');
     // Check if it's due to user stopping or an error
@@ -18,14 +22,13 @@ recognition.onresult = (event) => {
 
 window.addEventListener('load', () => {
     // 
-    recognition.start();
-
-    setTimeout(() => {
-        
-        speakJarvis('Hello I am jarvis')
-    }, 4000);
     
 });
+
+function listenForEmail() {
+    emailListening = true;
+    recognition.start();
+}
 
 /**
  * 
@@ -34,7 +37,7 @@ window.addEventListener('load', () => {
  */
 function speakJarvis(text) {
 
-    const text_speak = new SpeechSynthesisUtterance(text);
+    
     /**
      * specs configurations
      */
@@ -57,4 +60,10 @@ function speakJarvis(text) {
  */
 function commandToJarvis(command) {
     console.log(`command received : ${command}`);
+
+    if (emailListening == true) {
+        speakJarvis(`You entered email is ${command}`)
+        document.getElementById("email").value = command;
+    }
+    
 }
